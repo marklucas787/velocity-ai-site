@@ -1,0 +1,15 @@
+# Velocity AI — static site
+# No build step; files are served from the repo root.
+[build]
+  publish = "."
+
+# Long-cache the images, always-revalidate the HTML.
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

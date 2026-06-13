@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>90-Minute AI Audit | Velocity AI</title>
+<meta name="description" content="In 90 minutes, see exactly where AI plugs into the Microsoft stack you already own. A prioritized roadmap for finance teams. Mission control for your business." />
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['"Space Grotesk"', 'sans-serif'],
+          body: ['Inter', 'sans-serif'],
+          serif: ['"Instrument Serif"', 'serif'],
+          mono: ['"Space Grotesk"', 'monospace'],
+        },
+        colors: {
+          ink: '#05080F',
+          ink2: '#0A1019',
+          amber: '#F5A623',
+          amberlt: '#FBBF24',
+          teal: '#2DD4BF',
+          teallt: '#5EEAD4',
+        },
+      },
+    },
+  };
+</script>
+<style>
+  :root {
+    --bg: #05080F;
+    --bg2: #0A1019;
+    --line: rgba(255,255,255,0.08);
+    --line2: rgba(255,255,255,0.14);
+    --teal: #2DD4BF;
+    --amber: #F5A623;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: #E7ECF3;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--amber); color: #05080F; }
+
+  /* Glass panel — the universal building block (nexus) */
+  .glass {
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--line);
+  }
+  .soft-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--line);
+    transition: background .4s, border-color .4s, transform .4s;
+  }
+  .soft-card:hover {
+    background: rgba(255,255,255,0.045);
+    border-color: var(--line2);
+    transform: translateY(-3px);
+  }
+
+  /* Ambient navy aura + teal/amber glow blobs */
+  .aura { position:absolute; inset:0; pointer-events:none; }
+  .aura::before {
+    content:''; position:absolute; width:620px; height:620px; left:-180px; top:-220px;
+    background: radial-gradient(circle, rgba(45,212,191,0.16), transparent 60%);
+    filter: blur(40px);
+  }
+  .aura::after {
+    content:''; position:absolute; width:560px; height:560px; right:-160px; bottom:-200px;
+    background: radial-gradient(circle, rgba(245,166,35,0.12), transparent 60%);
+    filter: blur(50px);
+  }
+
+  /* Hairline grid with radial mask (nexus section-grid) */
+  .grid-bg {
+    position:absolute; inset:0; pointer-events:none; opacity:.5;
+    background:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 72px 72px;
+    -webkit-mask-image: radial-gradient(ellipse at 50% 0%, #000 35%, transparent 75%);
+            mask-image: radial-gradient(ellipse at 50% 0%, #000 35%, transparent 75%);
+  }
+
+  /* Mono label convention */
+  .mono-label {
+    font-family:'Space Grotesk', monospace; font-size:11px; font-weight:500;
+    text-transform:uppercase; letter-spacing:.24em; color: var(--teal);
+  }
+
+  /* Blur-reveal entrance (pony-house) */
+  .reveal { opacity:0; filter:blur(6px); transform:translateY(22px);
+    transition: all .9s cubic-bezier(0.16,1,0.3,1); }
+  .reveal.active { opacity:1; filter:blur(0); transform:translateY(0); }
+
+  /* Hairline shimmer divider */
+  .hairline { height:1px; background: var(--line); position:relative; overflow:hidden; }
+
+  /* Buttons */
+  .btn-amber {
+    background: var(--amber); color:#05080F; font-weight:600;
+    border-radius:10px; transition: transform .25s, box-shadow .25s, filter .25s;
+    box-shadow: 0 10px 30px -8px rgba(245,166,35,0.45);
+  }
+  .btn-amber:hover { transform: translateY(-2px); filter: brightness(1.05);
+    box-shadow: 0 16px 40px -8px rgba(245,166,35,0.6); }
+  .btn-ghost {
+    border:1px solid var(--line2); color:#E7ECF3; border-radius:10px;
+    transition: background .25s, border-color .25s;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.05); border-color:#fff; }
+
+  /* ROI bar */
+  .roi-track { background: rgba(255,255,255,0.07); border-radius:999px; height:7px; overflow:hidden; }
+  .roi-fill {
+    height:100%; border-radius:999px; width:0;
+    background: linear-gradient(90deg, var(--teal), var(--amber));
+    transition: width 1.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.active .roi-fill { width: var(--w); }
+
+  /* Tag chips */
+  .chip {
+    font-family:'Space Grotesk', monospace; font-size:10px; letter-spacing:.12em;
+    text-transform:uppercase; padding:3px 10px; border-radius:999px;
+    border:1px solid var(--line2); color:#AEB8C6;
+  }
+
+  /* FAQ accordion */
+  details { border-bottom:1px solid var(--line); }
+  details summary { list-style:none; cursor:pointer; }
+  details summary::-webkit-details-marker { display:none; }
+  details .plus { transition: transform .3s; color: var(--teal); }
+  details[open] .plus { transform: rotate(45deg); }
+
+  /* Image framing */
+  .img-frame { border:1px solid var(--line); border-radius:16px; overflow:hidden;
+    box-shadow: 0 40px 80px -30px rgba(0,0,0,0.8); }
+  .img-frame img { display:block; width:100%; height:100%; object-fit:cover; }
+
+  /* Wordmark trust strip */
+  .wordmark { font-family:'Space Grotesk', sans-serif; font-weight:500; letter-spacing:.02em;
+    color: rgba(231,236,243,0.55); transition: color .3s; white-space:nowrap; }
+  .wordmark:hover { color: rgba(231,236,243,0.95); }
+</style>
+</head>
+<body class="font-body antialiased">
+
+<!-- NAV -->
+<header class="fixed top-0 inset-x-0 z-50">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="mt-4 glass rounded-xl flex items-center justify-between px-5 py-3">
+      <div class="flex items-center gap-2.5">
+        <span class="inline-block w-2.5 h-2.5 rounded-full bg-teal" style="box-shadow:0 0 12px #2DD4BF;"></span>
+        <span class="font-display font-semibold tracking-tight text-[15px]">Velocity AI</span>
+        <span class="hidden sm:inline mono-label ml-2 !text-white/30">Mission Control for your business</span>
+      </div>
+      <a href="#book" class="btn-amber text-sm px-4 py-2">Book the Audit</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="relative pt-40 pb-24 overflow-hidden">
+  <div class="aura"></div>
+  <div class="grid-bg"></div>
+  <div class="relative max-w-6xl mx-auto px-6">
+    <div class="reveal">
+      <span class="mono-label">For finance teams already running on Microsoft</span>
+    </div>
+    <h1 class="reveal mt-6 font-display font-semibold tracking-tighter leading-[0.98] text-[40px] sm:text-[58px] md:text-[68px] max-w-4xl">
+      You're already paying for Microsoft.<br />
+      You shouldn't be <span class="font-serif italic font-normal text-teal">trapped</span> by it.
+    </h1>
+    <p class="reveal mt-7 text-[17px] md:text-[19px] leading-relaxed text-white/70 max-w-2xl">
+      In 90 minutes, see exactly where AI plugs into the stack you already own, and walk away with the three to five automations worth building first, ranked by what each one gives back in hours and dollars. No rip-and-replace. No hype. No new platform to learn.
+    </p>
+    <div class="reveal mt-9 flex flex-col sm:flex-row sm:items-center gap-4">
+      <a href="#book" class="btn-amber px-7 py-3.5 text-[15px]">Book your 90-Minute AI Audit</a>
+      <p class="text-sm text-white/50 max-w-xs leading-snug">
+        $1,500, credited in full toward your build. Leave with at least 3 quantified opportunities or you don't pay.
+      </p>
+    </div>
+
+    <div class="reveal mt-14 img-frame max-w-5xl">
+      <img src="hero-A.png" alt="A finance operations leader in calm command of their Microsoft dashboards" />
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BANNER -->
+<section class="relative py-12 border-y border-white/[0.06]">
+  <div class="max-w-6xl mx-auto px-6">
+    <p class="reveal text-center mono-label !text-white/35 mb-7">Three decades delivering across</p>
+    <div class="reveal flex flex-wrap items-center justify-center gap-x-10 gap-y-5 text-lg md:text-xl">
+      <span class="wordmark">Microsoft</span>
+      <span class="wordmark">NASA</span>
+      <span class="wordmark">T. Rowe Price</span>
+      <span class="wordmark">Booz Allen Hamilton</span>
+      <span class="wordmark">Northrop Grumman</span>
+      <span class="wordmark">BAE Systems</span>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 1 — PROBLEM -->
+<section class="relative py-28 overflow-hidden">
+  <div class="aura"></div>
+  <div class="relative max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-14 items-center">
+    <div class="reveal">
+      <span class="mono-label">The problem</span>
+      <h2 class="mt-5 font-display font-semibold tracking-tight text-[32px] md:text-[42px] leading-[1.05]">
+        You have the tools. You're just not getting AI <span class="font-serif italic font-normal text-teal">out</span> of them.
+      </h2>
+      <div class="mt-6 space-y-5 text-white/70 text-[16px] leading-relaxed">
+        <p>You've invested in Microsoft 365 and the Power Platform. Your data lives in SharePoint and Dataverse. And yet every AI conversation seems to end the same way: a flashy demo that doesn't fit how you actually work, a vendor pushing a brand-new platform, or a compliance question nobody can answer.</p>
+        <p>For a finance firm, the stakes are higher. Client data, regulatory exposure, audit trails. "Move fast and break things" is not an option when the SEC and your clients are watching.</p>
+        <p class="text-white/90">So the AI projects stall. Not because the technology isn't ready, but because nobody has mapped it to the systems and the rules you already live with.</p>
+      </div>
+    </div>
+    <div class="reveal img-frame">
+      <img src="problem-1.png" alt="Chaos resolving into a single clear path" />
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2 — WHAT THE AUDIT IS -->
+<section class="relative py-24 border-t border-white/[0.06] bg-ink2/40">
+  <div class="relative max-w-4xl mx-auto px-6 text-center">
+    <span class="reveal block mono-label">What the audit is</span>
+    <h2 class="reveal mt-5 font-display font-semibold tracking-tight text-[32px] md:text-[44px] leading-[1.05]">
+      A working session, <span class="font-serif italic font-normal text-teal">not</span> a sales pitch.
+    </h2>
+    <div class="reveal mt-7 text-white/70 text-[17px] leading-relaxed space-y-5">
+      <p>The 90-Minute AI Audit is a focused working session with me, Mark Lucas. We get on a call, I ask sharp questions about how your team actually spends its time, and we look at your real workflows together. I am not there to sell you software. I am there to find the work that AI should be doing for you, inside the stack you already trust.</p>
+      <p>By the end, you have a clear, prioritized picture of what is possible, what it would take, and what it would return. Most clients tell me it's the first time AI has felt concrete instead of theoretical.</p>
+    </div>
+    <p class="reveal mt-8 inline-block glass rounded-xl px-6 py-4 text-sm text-white/75">
+      <span class="text-teal font-medium">What to bring:</span> the person who knows where the manual work hides, and a willingness to be honest about it.
+    </p>
+  </div>
+</section>
+
+<!-- SECTION 3 — DELIVERABLE / ROADMAP CARD -->
+<section class="relative py-28 overflow-hidden">
+  <div class="aura"></div>
+  <div class="relative max-w-6xl mx-auto px-6">
+    <div class="text-center max-w-2xl mx-auto">
+      <span class="reveal block mono-label">What you walk away with</span>
+      <h2 class="reveal mt-5 font-display font-semibold tracking-tight text-[32px] md:text-[44px] leading-[1.05]">
+        Your Prioritized AI <span class="font-serif italic font-normal text-teal">Opportunity</span> Roadmap.
+      </h2>
+      <p class="reveal mt-6 text-white/70 text-[16px] leading-relaxed">
+        Not notes. Not a follow-up deck. A real document you keep, whether or not we ever work together again.
+      </p>
+    </div>
+
+    <!-- The card -->
+    <div class="reveal mt-14 glass rounded-2xl p-6 md:p-9 max-w-3xl mx-auto">
+      <div class="flex items-center justify-between border-b border-white/10 pb-5 mb-6">
+        <div>
+          <p class="mono-label !text-white/40">Velocity AI</p>
+          <h3 class="font-display font-semibold text-xl mt-1">AI Opportunity Roadmap</h3>
+        </div>
+        <span class="chip">Illustrative</span>
+      </div>
+
+      <!-- rows -->
+      <div class="space-y-7">
+        <!-- row -->
+        <div>
+          <div class="flex items-baseline justify-between gap-4">
+            <div class="flex items-baseline gap-3">
+              <span class="font-display text-teal text-sm">01</span>
+              <span class="font-medium text-[15px]">Quarterly reporting assembly</span>
+            </div>
+            <span class="text-white/55 text-sm whitespace-nowrap">~8 hrs/wk</span>
+          </div>
+          <div class="mt-2.5 flex items-center gap-3">
+            <div class="roi-track flex-1"><div class="roi-fill" style="--w:95%"></div></div>
+            <span class="chip">Effort: Medium</span>
+          </div>
+        </div>
+        <!-- row -->
+        <div>
+          <div class="flex items-baseline justify-between gap-4">
+            <div class="flex items-baseline gap-3">
+              <span class="font-display text-teal text-sm">02</span>
+              <span class="font-medium text-[15px]">Client onboarding document automation</span>
+            </div>
+            <span class="text-white/55 text-sm whitespace-nowrap">~6 hrs/wk</span>
+          </div>
+          <div class="mt-2.5 flex items-center gap-3">
+            <div class="roi-track flex-1"><div class="roi-fill" style="--w:88%"></div></div>
+            <span class="chip">Effort: Low</span>
+          </div>
+        </div>
+        <!-- row -->
+        <div>
+          <div class="flex items-baseline justify-between gap-4">
+            <div class="flex items-baseline gap-3">
+              <span class="font-display text-teal text-sm">03</span>
+              <span class="font-medium text-[15px]">Compliance evidence collection</span>
+            </div>
+            <span class="text-white/55 text-sm whitespace-nowrap">~5 hrs/wk</span>
+          </div>
+          <div class="mt-2.5 flex items-center gap-3">
+            <div class="roi-track flex-1"><div class="roi-fill" style="--w:78%"></div></div>
+            <span class="chip">Effort: Medium</span>
+          </div>
+        </div>
+        <!-- row -->
+        <div>
+          <div class="flex items-baseline justify-between gap-4">
+            <div class="flex items-baseline gap-3">
+              <span class="font-display text-teal text-sm">04</span>
+              <span class="font-medium text-[15px]">Inbox and CRM triage</span>
+            </div>
+            <span class="text-white/55 text-sm whitespace-nowrap">~4 hrs/wk</span>
+          </div>
+          <div class="mt-2.5 flex items-center gap-3">
+            <div class="roi-track flex-1"><div class="roi-fill" style="--w:70%"></div></div>
+            <span class="chip">Effort: Low</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- what's in it -->
+    <div class="mt-12 grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+      <div class="reveal soft-card rounded-xl p-5 text-sm text-white/75"><span class="text-teal">Ranked by ROI</span>, with a plain-English effort estimate and an honest hours-saved-per-week number.</div>
+      <div class="reveal soft-card rounded-xl p-5 text-sm text-white/75"><span class="text-teal">Compliance and data-security notes</span> that matter for a regulated finance environment, flagged up front.</div>
+      <div class="reveal soft-card rounded-xl p-5 text-sm text-white/75"><span class="text-teal">Drawn from your actual workflows</span>, not a generic checklist.</div>
+      <div class="reveal soft-card rounded-xl p-5 text-sm text-white/75"><span class="text-teal">A clear first move</span>, so you know exactly where to start on Monday.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4 — WHY ME -->
+<section class="relative py-28 border-t border-white/[0.06] overflow-hidden">
+  <div class="relative max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-14 items-center">
+    <div class="reveal img-frame order-2 md:order-1">
+      <img src="cc-clean-1.png" alt="Mission control command center" />
+    </div>
+    <div class="reveal order-1 md:order-2">
+      <span class="mono-label">Why me</span>
+      <h2 class="mt-5 font-display font-semibold tracking-tight text-[30px] md:text-[40px] leading-[1.08]">
+        Microsoft-fluent. AI-native. Built for environments where mistakes are <span class="font-serif italic font-normal text-teal">expensive</span>.
+      </h2>
+      <div class="mt-6 space-y-5 text-white/70 text-[16px] leading-relaxed">
+        <p>I have spent more than 30 years inside the Microsoft ecosystem, building solutions for organizations that cannot afford to get it wrong: NASA's Moon to Mars program, the Department of Justice, NATO, and financial institutions like T. Rowe Price. I hold Microsoft certifications going back to 1996 and I build on the Power Platform every day.</p>
+        <p class="text-white/90">I am not an AI generalist who learned Microsoft last week, and I am not a Microsoft consultant who's nervous about AI. I am the bridge. That is the whole point of an advisor: you get judgment, not a product pitch.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5 — PRICE & GUARANTEE -->
+<section class="relative py-24 bg-ink2/40 border-t border-white/[0.06]">
+  <div class="relative max-w-3xl mx-auto px-6 text-center">
+    <span class="reveal block mono-label">Price &amp; guarantee</span>
+    <h2 class="reveal mt-5 font-display font-semibold tracking-tight text-[34px] md:text-[46px] leading-[1.05]">
+      $1,500. Fully credited to your build.
+    </h2>
+    <p class="reveal mt-3 font-serif italic text-2xl text-teal">Guaranteed to pay for itself.</p>
+    <div class="reveal mt-8 text-white/70 text-[16px] leading-relaxed space-y-5 max-w-xl mx-auto">
+      <p>The audit is $1,500. If you move forward with an AIOS install, the entire fee is credited toward it, so the roadmap effectively costs you nothing.</p>
+      <p>And the guarantee is simple: <span class="text-white/95">if you don't leave the session with at least three specific, quantified opportunities, you don't pay.</span> I am that confident there is hidden time and money in your operation, because there always is.</p>
+    </div>
+    <a href="#book" class="reveal btn-amber inline-block mt-9 px-8 py-4 text-[15px]">Book your 90-Minute AI Audit</a>
+  </div>
+</section>
+
+<!-- SECTION 6 — HOW IT WORKS -->
+<section class="relative py-28 overflow-hidden">
+  <div class="aura"></div>
+  <div class="relative max-w-6xl mx-auto px-6">
+    <div class="text-center">
+      <span class="reveal block mono-label">How it works</span>
+      <h2 class="reveal mt-5 font-display font-semibold tracking-tight text-[32px] md:text-[44px]">
+        Three steps. About a week, <span class="font-serif italic font-normal text-teal">start to finish</span>.
+      </h2>
+    </div>
+    <div class="mt-14 grid md:grid-cols-3 gap-6">
+      <!-- step 1 -->
+      <div class="reveal soft-card rounded-2xl p-7">
+        <div class="flex items-center justify-between">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="1.5"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+          <span class="mono-label !text-white/30">Step 01</span>
+        </div>
+        <h3 class="mt-5 font-display font-semibold text-xl">Book</h3>
+        <p class="mt-3 text-white/65 text-[15px] leading-relaxed">Pick a time. You'll get a short intake form so the 90 minutes are spent finding answers, not gathering basics.</p>
+      </div>
+      <!-- step 2 -->
+      <div class="reveal soft-card rounded-2xl p-7">
+        <div class="flex items-center justify-between">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="mono-label !text-white/30">Step 02</span>
+        </div>
+        <h3 class="mt-5 font-display font-semibold text-xl">The session</h3>
+        <p class="mt-3 text-white/65 text-[15px] leading-relaxed">We meet for 90 minutes, look at your real workflows, and map the opportunities together.</p>
+      </div>
+      <!-- step 3 -->
+      <div class="reveal soft-card rounded-2xl p-7">
+        <div class="flex items-center justify-between">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>
+          <span class="mono-label !text-white/30">Step 03</span>
+        </div>
+        <h3 class="mt-5 font-display font-semibold text-xl">The roadmap</h3>
+        <p class="mt-3 text-white/65 text-[15px] leading-relaxed">Within two business days, you receive your Prioritized AI Opportunity Roadmap, yours to keep.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 7 — FAQ -->
+<section class="relative py-24 border-t border-white/[0.06]">
+  <div class="relative max-w-3xl mx-auto px-6">
+    <span class="reveal block mono-label text-center">Questions</span>
+    <h2 class="reveal mt-5 mb-10 text-center font-display font-semibold tracking-tight text-[30px] md:text-[40px]">
+      The honest answers.
+    </h2>
+    <div class="reveal">
+      <!-- item -->
+      <details open>
+        <summary class="flex items-center justify-between py-5">
+          <span class="font-medium text-[17px]">Is this just a sales call in disguise?</span>
+          <span class="plus text-2xl leading-none">+</span>
+        </summary>
+        <p class="pb-6 text-white/65 leading-relaxed">No. You leave with a real, useful document regardless of whether we work together again. If the roadmap is all you ever buy, that's a good outcome for both of us.</p>
+      </details>
+      <details>
+        <summary class="flex items-center justify-between py-5">
+          <span class="font-medium text-[17px]">We're in financial services. What about data security and compliance?</span>
+          <span class="plus text-2xl leading-none">+</span>
+        </summary>
+        <p class="pb-6 text-white/65 leading-relaxed">That's exactly the environment I'm built for. I've handled Controlled Unclassified Information for NASA and delivered for the DOJ and NATO. We talk through your data, access, and regulatory constraints up front, and the roadmap flags them on every recommendation.</p>
+      </details>
+      <details>
+        <summary class="flex items-center justify-between py-5">
+          <span class="font-medium text-[17px]">Do we have to be on Microsoft 365 or Power Platform?</span>
+          <span class="plus text-2xl leading-none">+</span>
+        </summary>
+        <p class="pb-6 text-white/65 leading-relaxed">It's where I add the most value and where most of my clients already are. If you're on Microsoft, you'll get the sharpest roadmap. If you're partly on it, we'll still find the wins.</p>
+      </details>
+      <details>
+        <summary class="flex items-center justify-between py-5">
+          <span class="font-medium text-[17px]">Who should be on the call?</span>
+          <span class="plus text-2xl leading-none">+</span>
+        </summary>
+        <p class="pb-6 text-white/65 leading-relaxed">You, plus whoever actually knows where the manual, repetitive work lives. Often that's an operations or finance lead, not the CEO.</p>
+      </details>
+      <details>
+        <summary class="flex items-center justify-between py-5">
+          <span class="font-medium text-[17px]">What happens after?</span>
+          <span class="plus text-2xl leading-none">+</span>
+        </summary>
+        <p class="pb-6 text-white/65 leading-relaxed">If the roadmap excites you, the natural next step is an AIOS install, where I build the top opportunities into your stack. The $1,500 credits toward it. If you'd rather take the roadmap and run, that's completely fine.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="book" class="relative py-32 overflow-hidden">
+  <div class="aura"></div>
+  <div class="grid-bg"></div>
+  <div class="relative max-w-3xl mx-auto px-6 text-center">
+    <h2 class="reveal font-display font-semibold tracking-tighter text-[34px] md:text-[52px] leading-[1.02]">
+      Ninety minutes from now, you could have a <span class="font-serif italic font-normal text-teal">plan</span> instead of a question.
+    </h2>
+    <p class="reveal mt-6 text-white/70 text-[17px] leading-relaxed max-w-xl mx-auto">
+      Stop wondering what AI could do for your firm. Find out, specifically, with someone who knows both your stack and the rules you operate under.
+    </p>
+    <a href="#book" class="reveal btn-amber inline-block mt-10 px-9 py-4 text-base">Book your 90-Minute AI Audit</a>
+    <p class="reveal mt-5 text-sm text-white/45">$1,500, credited to your build. At least 3 quantified opportunities or you don't pay.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="border-t border-white/[0.06] py-10">
+  <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/40">
+    <div class="flex items-center gap-2.5">
+      <span class="inline-block w-2 h-2 rounded-full bg-teal"></span>
+      <span class="font-display font-medium text-white/70">Velocity AI</span>
+      <span class="mono-label !text-white/25 ml-2">Mission Control for your business</span>
+    </div>
+    <p>JamesTech LLC &middot; Columbia, MD</p>
+  </div>
+</footer>
+
+<script>
+  // Blur-reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('active'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    el.style.transitionDelay = Math.min(i % 6, 5) * 60 + 'ms';
+    io.observe(el);
+  });
+</script>
+</body>
+</html>
